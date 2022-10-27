@@ -15,5 +15,4 @@ def monty_hall(amount):
         amount -= 1
     return selected_door_1 / (total / 100)
 
-def birthday(amount):
-    return amount
+print(monty_hall(10000))
