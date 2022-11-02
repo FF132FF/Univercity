@@ -1,4 +1,4 @@
-from Paradox import *
+import Paradox
 
-print(match_checking(23, 10000))
-print(monty_hall(10000))
+print(Paradox.monty_hall(10000))
+print(Paradox.match_checking(23, 1000))
