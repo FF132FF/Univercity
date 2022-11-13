@@ -1,8 +1,8 @@
-sentence = input()
-words = sentence.split(' ')
-l = []
+text = input()
+words = text.split(' ')
+list = []
 result = {}
 for word in words:
     result[word] = result.get(word, 0) + 1
-    l.append(result.get(word, 0) - 1)
-print(l)
+    list.append(result.get(word, 0) - 1)
+print(*list, sep = ' ')
