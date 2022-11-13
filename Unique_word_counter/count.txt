@@ -1,0 +1,11 @@
+9
+===========
+axe
+hex
+invoker
+jugger
+lefrut
+mango
+orb
+phoenix
+tango
