@@ -26,4 +26,4 @@ while N != 0:
     N -= 1
 
 for i in l_Check:
-    print (i)
+    print(i)
