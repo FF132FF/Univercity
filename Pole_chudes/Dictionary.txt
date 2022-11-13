@@ -1,0 +1,9 @@
+axe
+orb
+hex
+jugger
+phoenix
+lefrut
+mango
+tango
+invoker
