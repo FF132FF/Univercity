@@ -1,4 +1,5 @@
-9
+# File content count.txt
+Total unique words: 9
 ===========
 axe
 hex

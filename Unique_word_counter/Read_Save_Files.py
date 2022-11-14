@@ -10,8 +10,10 @@ def save_file(returned_file, requested_file):
     words = content
     words = ' '.join(words)
     words = words.replace(" ", "\n")
-    text_to_write = count, words
     returned_file = open(returned_file, mode='w+')
+    returned_file.write(str("# File content "))
+    returned_file.write(str(returned_file.name))
+    returned_file.write(str("\nTotal unique words: "))
     returned_file.write(str(count))
     returned_file.write(str("\n===========\n"))
     returned_file.write(str(words))
