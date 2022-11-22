@@ -24,6 +24,6 @@ def fixing_a_record(current_Record):
         max_record: int = current_Record
     record_in_file.seek(0)
     record_in_file.write(str(max_record))
-    print("   Current record:", current_Record, "=== Max record:", max_record)
-    separator: str = "========================================="
+    print("      Current record:", current_Record, "=== Max record:", max_record)
+    separator: str = "=============================================="
     return separator

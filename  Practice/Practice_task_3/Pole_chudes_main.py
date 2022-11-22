@@ -16,7 +16,7 @@ elif lifes == 3:
     lifes = 3
 
 while len(dictionary) != 0:
-    print("=========================================")
+    print("=============================================")
     print("Words in pool: ", len(dictionary))
     record: list = []
     hidden_word: list = []
@@ -39,13 +39,13 @@ while len(dictionary) != 0:
             counter += 1
         lifes -= 1
         if str(letters) == str(dictionary[random_word]):
-            print("\n ===== Word guessed. Full word in one try ===== \n")
+            print("\n===== Word guessed. Full word in one try ===== \n")
             current_record += 1
             print(Fixing_a_record.fixing_a_record(current_record), "\n")
             dictionary.pop(random_word)
             break
         if '\u25A0' not in hidden_word:
-            print("\n ===== Word guessed. The words in the dictionary are over ===== \n")
+            print("\n===== Word guessed. The words in the dictionary are over ===== \n")
             current_record += 1
             print(Fixing_a_record.fixing_a_record(current_record), "\n")
             dictionary.pop(random_word)
