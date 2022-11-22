@@ -6,7 +6,7 @@ def Get_Word():
     return Dictionary
 
 def Fix_a_Rec(Current_Record):
-    new_Record = open("Record.txt", mode = 'r+')
+    new_Record = open("Record.txt", mode ='r+')
     max_Record = int(new_Record.read())
 
     if Current_Record > max_Record:
