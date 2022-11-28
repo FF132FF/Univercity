@@ -1,20 +1,27 @@
-def books_csv_extract():
+import csv
+
+def csv_extract():
     '''
     Открывает файл books.csv и конвертирует его в читаемый для программы текст
     :return: текст без isbn|title|author|quantity|price
     '''
-    contents = open("books.csv")
-    returned_file = contents.read()
-    returned_file = returned_file.replace("isbn|title|author|quantity|price", "").replace("\n", "", 1)
-    return str(returned_file)
-
+    with open('books.csv', 'r', ) as file:
+        fixed_text = ""
+        reader = csv.reader(file, delimiter='\t')
+        for row in reader:
+            fixed_text = fixed_text+str(row)+"\n"
+    fixed_text = fixed_text.replace("[","").replace("]","").replace("'","")
+    fixed_text = fixed_text.replace("isbn|title|author|quantity|price", "").replace("\n", "", 1)
+    fixed_text = fixed_text[::-1].replace("\n", "", 1)
+    fixed_text = fixed_text[::-1]
+    return fixed_text
 
 def convert_list():
     '''
     Преобразует текст в список, с маленькими буквами для удобства поиска в будущем
     :return: список
     '''
-    txtfromfile = books_csv_extract()
+    txtfromfile = csv_extract()
     txt = txtfromfile.lower()
     txt = txt.splitlines()
     txt_out = txt
