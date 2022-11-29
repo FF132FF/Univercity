@@ -6,7 +6,8 @@ dictionary: list = Fixing_a_record.get_word()
 print("Dictionary pool: ", dictionary)
 print(Fixing_a_record.fixing_a_record(current_record))
 lifes: int = int(input("===(1) Easy difficulty level (7 lifes), \n===(2) Normal difficulty level (5 lifes), "
-    "\n===(3) Hard difficulty level (3 lifes), \n===(or input == lifes!) \nEnter your chosen difficulty level: "))
+                       "\n===(3) Hard difficulty level (3 lifes), \n===(or input == lifes!) \nEnter your chosen "
+                       "difficulty level: "))
 
 if lifes == 1:
     lifes = 7

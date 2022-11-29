@@ -2,7 +2,7 @@ def read_file(requested_file: str):
     '''
     Функция принимает название файла; открывает и считывает этот файл; форматирует данные файла в список и возваращает
     его
-    :param requested_file: название файла (из которого мы возьмем данные)
+    :param requested_file: Название файла (из которого мы возьмем данные)
     :return: Список слов (находящихся в файле)
     '''
     content: TextIOWrapper = open(requested_file, "r+")
@@ -16,7 +16,7 @@ def save_file(returned_file: str, requested_file: str):
     полученный список; форматирует и записывает данные в файл, который и возвращает нам.
     :param returned_file: Название файла (в который мы запишем данные)
     :param requested_file: Название файла (из которого мы возьмем данные)
-    :return: файл (с записанным в него результатом)
+    :return: Файл (с записанным в него результатом)
     '''
     content: list = read_file(requested_file)
     content.sort()

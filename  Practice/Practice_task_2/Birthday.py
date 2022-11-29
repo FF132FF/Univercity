@@ -7,7 +7,7 @@ def match_checking(group: int, iterations: int):
     руппе; возвращает разделитель (весь вывод отображается внутри функции, поэтому такой return)
     :param group: Количество студентов в группе
     :param times: Количество итераций
-    :return: Возвращает разделитель
+    :return: Разделитель
     '''
     number_of_iterations: int = iterations
     count_yes: int = 0
