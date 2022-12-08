@@ -1,6 +1,7 @@
 import csv
 import re
 
+
 def converter():
     '''
     Преобразовывает books.csv в books_converted.txt (не уверен что это требуется, но сделано, т.к. легче понимается);
@@ -29,6 +30,7 @@ def creating_a_list_of_books_elements():
     list_of_books: list = re.findall(books_pattern, content)
     return list_of_books
 
+
 def get_books(keyword: str):
     '''
     Получаем на вход ключевое слово; производим поиск совпадений в списках из функции creating_a_list_of_books_elements
@@ -46,6 +48,7 @@ def get_books(keyword: str):
                 with_matches.append(element)
     return with_matches
 
+
 def get_totals(list_of_books):
     '''
     Принимаем список списков из функции creating_a_list_of_books_elements(); приводим к виду [(isbn, quantity * price)];
@@ -61,4 +64,3 @@ def get_totals(list_of_books):
             quantity_multiply_price += 100
         books_totals.append((book_elements[0], quantity_multiply_price))
     return books_totals
-
