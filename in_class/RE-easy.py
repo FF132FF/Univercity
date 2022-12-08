@@ -38,7 +38,7 @@ pattern = r'\W+'
 print(re.split(pattern, string))
 
 
-# re.findall(pattern, string)	string,
+# re.findall(pattern, string)	string
 
 string = 'Р­С‚Р° СЃС‚СЂРѕРєР° РЅР°РїРёСЃР°РЅР° 19.01.2018, Р° РјРѕРіР»Р° Р±С‹ Рё 01.09.2017'
 pattern = r'\d\d\.\d\d\.\d{4}'

@@ -1,61 +1,90 @@
 phone_book = {}
-a = 0
-key = str
-temp = str
-value = "123"
 
-def menuSelect(a):
-    a = int(input(" 1 Добавить контакт \n 2 Удалить контакт \n 3 Изменить контакт \n 4 просмотреть контакты \n "))
-    return a
 
-def name_input(key):
-    key = input(" Введите контакт: ")
+def menu_select():
+    '''
+    Выбор функции, которую хотим использовать; возвращает номер функции
+    :param a: Параметр (изначально 0)
+    :return: Параметр (1-4 в зависимости от выбранной функции)
+    '''
+
+    action: int = int(input("1 Добавить контакт \n2 Удалить контакт \n3 Изменить контакт \n4 Просмотреть контакты "
+                            "\n0 Закрыть меню выбора функций \n==== "))
+    return action
+
+
+def contact_input():
+    '''
+    Записывает новый ключ (контакт)
+    :return: Ключ
+    '''
+    key = str(input("Введите контакт: "))
     key = key.lower()
     key = key.title()
     return key
 
-def num_stand(temp):
-    value = input(" Введите номер телефона: ")
+
+def num_input():
+    '''
+    Записывает значение для ключа; форматирует значение; проверяет число ли это; если нет, вызывает функцию заново;
+    возвращает значение для ключа;
+    :return: Значение (для ключа)
+    '''
+    value: str = input("Введите номер телефона: ")
     value = value.replace("+7", "8")
     value = value.replace(" ", "").replace("-", "")
-    temp = value
-    return temp
-
-def num_input(value):
-    value = num_stand(temp)
     while value.isdigit() != 1:
         print("Введите снова")
-        value = num_stand(temp)
+        value = num_input()
     return value
 
-def deletionOf(key):
-    key = "a"
-    print(" Введите контакт, который хотите удалить: ")
-    key = name_input(key)
+
+def del_contact():
+    '''
+    Удаляет контакт; возвращает сообщение о том, что контакт удален
+    :return: Сообщение (о том, что контакт удален)
+    '''
+    key = str(input("Введите контакт, который хотите удалить: "))
     del phone_book[key]
+    return "==== Контакт удален ===="
 
-def selected1(key,value):
-    key = name_input(key)
-    value = num_input(value)
+
+def add_contact():
+    '''
+    Добавляет контакт; При помощи функций получает ключ(имя контакта), значение для ключа(номер телефона); Записывает
+    ключ: значение в словарь phone_book; возвращает сообщение о том, что контакт добавлен
+    :return: Сообщение (о том, что контакт добавлен)
+    '''
+    key: str = contact_input()
+    value: str = num_input()
     phone_book[key] = value
+    return "==== Контакт добавлен ===="
 
-def selected3(key,value):
-    print(" Введите контакт для изменения: ")
-    key = name_input(key)
+
+def change_contact():
+    '''
+    Изменяет телефон для контакта (значение для ключа в словаре); получаем ключ, и удаляем его; записываем заново с
+    новым значением; возвращает сообщение о том, что контакт изменен
+    :return: Сообщение (о том, что контакт изменен)
+    '''
+    print("==== Контакт, который хотите изменить ====")
+    key: str = contact_input()
     del phone_book[key]
-    print(" Введите новый номер: ")
-    value = num_input(value)
+    print("==== Новый номер ====")
+    value: str = num_input()
     phone_book[key] = value
+    return "==== Контакт изменен ===="
 
-a = menuSelect(a)
 
-while a != 0:
-    if a == 1:
-        selected1(key,value)
-    if a == 2:
-        deletionOf(key)
-    if a == 3:
-        selected3(key,value)
-    if a == 4:
+action = menu_select()
+
+while action != 0:
+    if action == 1:
+        add_contact()
+    if action == 2:
+        del_contact()
+    if action == 3:
+        change_contact()
+    if action == 4:
         print(phone_book)
-    a = menuSelect(a)
+    action = menu_select()
