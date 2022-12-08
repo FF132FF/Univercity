@@ -1,94 +1,64 @@
 import csv
+import re
 
-def csv_extract():
+def converter():
     '''
-    Открывает файл books.csv и конвертирует его в читаемый для программы текст
-    :return: текст без isbn|title|author|quantity|price
+    Преобразовывает books.csv в books_converted.txt (не уверен что это требуется, но сделано, т.к. легче понимается);
+    Возвращаем название файла (с преобразованными данными из csv в txt)
+    :return: Название файла (с преобразованными данными из csv в txt)
     '''
-    with open('books.csv', 'r', ) as file:
-        fixed_text = ""
-        reader = csv.reader(file, delimiter='\t')
-        for row in reader:
-            fixed_text = fixed_text+str(row)+"\n"
-    fixed_text = fixed_text.replace("[","").replace("]","").replace("'","")
-    fixed_text = fixed_text.replace("isbn|title|author|quantity|price", "").replace("\n", "", 1)
-    fixed_text = fixed_text[::-1].replace("\n", "", 1)
-    fixed_text = fixed_text[::-1]
-    return fixed_text
-
-def convert_list():
-    '''
-    Преобразует текст в список, с маленькими буквами для удобства поиска в будущем
-    :return: список
-    '''
-    txtfromfile = csv_extract()
-    txt = txtfromfile.lower()
-    txt = txt.splitlines()
-    txt_out = txt
-    c = 0
-    for word in txt:
-        txt_out[c] = txt[c]
-        c += 1
-    return txt_out
+    with open("books.csv", 'r', encoding='utf-8') as f:
+        books: _csv.reader = csv.reader(f, delimiter=',')
+        converted_file: TextIOWrapper = open("books_converted.txt", mode='w+', encoding='utf-8')
+        for row in books:
+            book_elements: str = ''.join(row)
+            converted_file.write(str(book_elements))
+            converted_file.write(str("\n"))
+    return "books_converted.txt"
 
 
-def get_name(name):
+def creating_a_list_of_books_elements():
     '''
-    Ищет по данному тексту совпадения, заносит их в список
-    :param name: текст для поиска
-    :return: список с совпадениями
+    Создаем общий список списоков параметров книг; возвращаем этот список
+    :return: Список (созданный нами общий список списков параметров книг)
     '''
-    list = convert_list()
-    new_li = []; c = 0
-    for word in list:
-        split_list = list[c].split("|")
-        only_name = split_list[1]
-        name = name.lower()
-        if name in only_name.split():
-            new_li.append(list[c])
-        c += 1
-    return new_li
+    books_pattern: str = r"(?P<isbn>\d+\-\d\-\d+\-\d+\-\d)(?:\|+)(?P<title>[^\|]*)(?:\|+)(?P<author>[^\|]*)(?:\|+)" \
+                         r"(?P<quantity>[^\|]*)(?:\|+)(?P<price>[^\n]*)"
+    converted_file: TextIOWrapper = open("books_converted.txt", mode='r+', encoding='utf-8')
+    content: str = converted_file.read()
+    list_of_books: list = re.findall(books_pattern, content)
+    return list_of_books
 
+def get_books(keyword: str):
+    '''
+    Получаем на вход ключевое слово; производим поиск совпадений в списках из функции creating_a_list_of_books_elements
+    по этому ключевому слову; возвращаем список списков, в которых найдены совпадения с ключевым словом
+    :param keyword: Ключевое слово
+    :return: Список (список списков, в которых найдены совпадения с ключевым словом)
+    '''
+    list_of_books: list = creating_a_list_of_books_elements()
+    with_matches: list = []
+    for element in list_of_books:
+        for book_element in element:
+            book_element_str: str = ''.join(book_element)
+            book_element_str_lower: str = book_element_str.lower()
+            if keyword in book_element_str_lower:
+                with_matches.append(element)
+    return with_matches
 
-def get_list(new_list):
+def get_totals(list_of_books):
     '''
-    Оставляет первою строку, умножает количество на цену, помещает в список
-    :param new_list: список для счета
-    :return: новый умноженный список
+    Принимаем список списков из функции creating_a_list_of_books_elements(); приводим к виду [(isbn, quantity * price)];
+    возвращаем отформатированный список
+    :param list_of_books: Список списков (из функции creating_a_list_of_books_elements())
+    :return: Список (отформатированный список вида [(isbn, quantity * price)])
     '''
-    c = 0; newer_li = []
-    for words in new_list:
-        split_list = new_list[c].split("|")
-        id = split_list[0]; amount = split_list[3]; cost = split_list[4]
-        tempm = float(amount) * float(cost)
-        split_list = id, tempm
-        newer_li.append(split_list)
-        c += 1
-    return newer_li
+    books_elements: list = list_of_books
+    books_totals: list = []
+    for book_elements in books_elements:
+        quantity_multiply_price: float = int(book_elements[3]) * float(book_elements[4])
+        if quantity_multiply_price < 500:
+            quantity_multiply_price += 100
+        books_totals.append((book_elements[0], quantity_multiply_price))
+    return books_totals
 
-
-def get_totals(newer_list):
-    '''
-    Функция, которая добавляет к сумме значение 100, если сумма меньше 500
-    :param newer_list: список для считывания
-    :return: список с измененными по условию значениями
-    '''
-    c = 0; newest_li = []
-    for words in newer_list:
-        current_part = newer_list[c]
-        current_id = current_part[0]; temp1 = current_part[1]
-        if temp1 < 500:
-            temp1 += 100
-        c += 1
-        current_part = current_id, temp1
-        newest_li.append(current_part)
-    return newest_li
-
-def printlist(list_name: list):
-    '''
-    Только для вывода списка
-    :param list_name: список
-    :return: выводит в консоль
-    '''
-    list_name = str(list_name).title()
-    print(list_name)
