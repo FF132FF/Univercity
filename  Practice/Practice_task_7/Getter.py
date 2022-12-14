@@ -49,7 +49,7 @@ def get_books(keyword: str):
     return with_matches
 
 
-def get_totals(list_of_books):
+def get_totals(list_of_books: list):
     '''
     Принимаем список списков из функции creating_a_list_of_books_elements(); приводим к виду [(isbn, quantity * price)];
     возвращаем отформатированный список
