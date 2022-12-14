@@ -1,0 +1,32 @@
+нечто|Something.|7
+человек|persons|6
+я|.|5
+что|what|3
+думать|think|2
+уже|Your Business|2
+февраль|February,|2
+cогласный|consonant|1
+автобус|Автобус|1
+апрель|April|1
+быть|be|1
+где|where|1
+должный|Due|1
+здесь|here|1
+кушать|A meal.|1
+хороший|Good|1
+минута|a minute|1
+назад|ago|1
+мы|we're|1
+находиться|stay|1
+неизбежный|inevitable|1
+он|??|1
+опаздывать|late|1
+поздно|late|1
+пора|void|1
+потому|because|1
+произойти|occur.|1
+скоро|soon|1
+судьба|Destiny|1
+так|so|1
+то|than|1
+тоже|the same|1
