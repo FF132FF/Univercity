@@ -31,19 +31,19 @@ def get_list_comprehension(n):
     return num_list_comprehension
 
 
-print("       Вывод функции get_list():\n")
+print("        Вывод функции get_list():\n")
 print(get_list(N))
 
-print("  =================================")
-print("       Вывод функции get_list():\n")
+print("  ============================================")
+print("        Вывод функции get_list():\n")
 print(get_list_comprehension(N))
 
-print("  =================================")
+print("  ============================================")
 first_test = test_time(get_list)
-print("       Для функции get_list():\n")
+print("        Для функции get_list():\n")
 first_test(N)
 
-print("  =================================")
+print("  ============================================")
 second_test = test_time(get_list_comprehension)
-print("       Для функции get_list_comprehension():\n")
+print("        Для функции get_list_comprehension():\n")
 second_test(N)
