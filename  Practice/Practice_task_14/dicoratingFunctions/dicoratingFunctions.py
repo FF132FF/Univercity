@@ -1,7 +1,6 @@
 import time
 
-
-def test_time(fn):
+def testTime(fn):
     def wrapper(*args):
         st = time.time()
         fn(*args)
@@ -10,40 +9,26 @@ def test_time(fn):
 
     return wrapper
 
-
-N = int(input("Введите любой целое число: "))
-num_list: list = []
-num_list_comprehension: list = []
-
-
-@test_time
-def get_list(n):
+@testTime
+def getList(n):
+    numList: list = []
     for i in range(n):
         if i % 2 == 0:
-            num_list.append(i)
+            numList.append(i)
+    return numList
 
-    return num_list
-
-
-@test_time
-def get_list_comprehension(n):
-    num_list_comprehension = [i for i in range(n) if i % 2 == 0]
-    return num_list_comprehension
+@testTime
+def getListComprehension(n):
+    numListComprehension = [i for i in range(n + 1) if i % 2 == 0]
+    return numListComprehension
 
 
-print("        Вывод функции get_list():\n")
-print(get_list(N))
+N = int(input("Введите число: "))
 
 print("  ============================================")
-print("        Вывод функции get_list():\n")
-print(get_list_comprehension(N))
+print("        Для функции get_list():")
+getList(N)
 
 print("  ============================================")
-first_test = test_time(get_list)
-print("        Для функции get_list():\n")
-first_test(N)
-
-print("  ============================================")
-second_test = test_time(get_list_comprehension)
-print("        Для функции get_list_comprehension():\n")
-second_test(N)
+print("        Для функции get_list_comprehension():")
+getListComprehension(N)
