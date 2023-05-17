@@ -1,87 +1,98 @@
-class Cell:
-
-    def __init__(self, number, busy=False):
-        self.number = number
-        self.busy = busy
-
-
 class Board:
 
     def __init__(self):
-        self.board = [Cell(i) for i in range(1, 10)]
+        self.board = {
+                "TL": " ", "TM": " ", "TR": " ",
+                "ML": " ", "MM": " ", "MR": " ",
+                "BL": " ", "BM": " ", "BR": " "}
 
-    def print_board(self):
-        print('-' * 13)
+    def printBoard(self):
+        print(self.board["TL"] + "|" + self.board["TM"] + "|" + self.board["TR"])
+        print("-+-+-")
+        print(self.board["ML"] + "|" + self.board["MM"] + "|" + self.board["MR"])
+        print("-+-+-")
+        print(self.board["BL"] + "|" + self.board["BM"] + "|" + self.board["BR"])
 
-        for i in range(3):
-            print('|', self.board[0 + i * 3].number, '|',
-                  self.board[1 + i * 3].number, '|',
-                  self.board[2 + i * 3].number, '|')
-
-        print('-' * 13)
-
-    def check_busy(self, number):
-
-        if self.board[number - 1].busy:
+    def isValidMove(self, position):
+        if self.board[position] == " ":
             return True
-        else:
-            return False
+        return False
 
-    def check_win(self):
-        win_coordinate = ((0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6),
-                          (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6))
+    def changeBoard(self, position, type):
+        if self.isValidMove(position):
+            self.board[position] = type
+            return self.board
+        return None
 
-        for coordinate in win_coordinate:
-            if (self.board[coordinate[0]].number ==
-                    self.board[coordinate[1]].number):
-                if (first_player.symb == self.board[coordinate[0]].number):
-                    print(f"Победил {first_player.name}")
-                elif (second_player.symb == self.board[coordinate[0]].number):
-                    print(f"Победил {second_player.name}")
+    def isWinner(self, player):
+        if self.board["TL"] == player.type and self.board["TM"] == player.type and self.board["TR"] == player.type or \
+        self.board["ML"] == player.type and self.board["MM"] == player.type and self.board["MR"] == player.type or \
+        self.board["BL"] == player.type and self.board["BM"] == player.type and self.board["BR"] == player.type or \
+        self.board["TL"] == player.type and self.board["ML"] == player.type and self.board["BL"] == player.type or \
+        self.board["TM"] == player.type and self.board["MM"] == player.type and self.board["BM"] == player.type or \
+        self.board["TR"] == player.type and self.board["MR"] == player.type and self.board["BR"] == player.type or \
+        self.board["TL"] == player.type and self.board["MM"] == player.type and self.board["BR"] == player.type or \
+        self.board["BL"] == player.type and self.board["MM"] == player.type and self.board["TR"] == player.type:
+            return True
+        return False
 
 
 class Player:
+    def __init__(self, type):
+        self.type = type
 
-    def __init__(self, name, symb, win=False):
-        self.name = name
-        self.symb = symb
-        self.win = win
-
-    def cell_selection(self, number, Board):
-        Board.board[number - 1].busy = True
-        Board.board[number - 1].number = self.symb
+    def __str__(self):
+        return "Player {}".format(self.type)
 
 
-first_player = Player("Андрей", 'X')
-second_player = Player("Егор", 'O')
-board = Board()
-count = 0
+class Game:
+    def __init__(self):
+        self.firstPlayer = Player("X")
+        self.secondPlayer = Player("O")
+        self.board = Board()
+
+    def printValidEntries(self):
+        print("""
+            TL | TM | TR 
+            ML | MM | MR 
+            BL | BM | BR """)
+
+    def printingBoard(self):
+        self.board.printBoard()
+
+    def changeTurn(self, player):
+        if player == self.firstPlayer:
+            return self.secondPlayer
+        else:
+            return self.firstPlayer
+
+    def wonGame(self, player):
+        return self.board.isWinner(player)
+
+    def modifyBoard(self, position, type):
+        if self.board.changeBoard(position, type) is not None:
+            return self.board.changeBoard(position, type)
+        else:
+            position = input("Not available position. Please, try again: ")
+            return self.board.changeBoard(position, type)
 
 
-def Game(player, board):
-    number = int(input(f"Выбирайте клетку куда хотите сходить, {player.name}: "))
-
-    if board.check_busy(number):
-        print("Клетка занята")
-        Game(player, board)
-    else:
-        player.cell_selection(number, board)
-
-
-while True:
-    board.print_board()
-
-    if count % 2 == 0:
-        Game(first_player, board)
-        if board.check_win():
+def play():
+    game = Game()
+    game.printValidEntries()
+    player = game.firstPlayer
+    number = 9
+    while number > 0:
+        number -= 1
+        game.printingBoard()
+        position = input("{} turn, what's your move? ".format(player))
+        game.modifyBoard(position, player.type)
+        if game.wonGame(player):
+            print("{} is the Winner!".format(player))
             break
         else:
-            Game(second_player, board)
-            if board.check_win():
-                break
+            player = game.changeTurn(player)
+    if number == 0:
+        print("Game over! It's a tie!")
 
-    count += 1
-
-    if count == 9:
-        print("Ничья")
-        break
+play()
