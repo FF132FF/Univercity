@@ -8,41 +8,38 @@ class Student:
         self.grades = {}
 
     def addCourse(self, courseName):
-        self.finishedCourses.append(courseName)
+        if courseName in self.coursesInProgress and self.grades[courseName] != []:
+            self.finishedCourses.append(courseName)
+        else:
+            self.coursesInProgress.append(courseName)
+
 
     def rateLecturer(self, lecturer, course, grade):
         if course in lecturer.coursesAttached and (course in self.coursesInProgress or course in self.finishedCourses):
-            lecturer.grades[course] = [grade]
+            if course in lecturer.grades:
+                lecturer.grades[course].append(grade)
+            else:
+                lecturer.grades[course] = [grade]
 
     def averageRating(self):
         sum = 0
         count = 0
-        for grades in self.grades.values():
-            for grade in grades:
-                sum += grade
-                count += 1
+        for grade in self.grades.values():
+            count += len(grade)
+            for element in grade:
+                sum += element
         if count == 0:
             return "Не оценен"
-        return round(sum / count, 3)
-
-    def __str__(self):
-        avgRating = self.averageRating()
-        coursesInProgress = ', '.join(self.coursesInProgress)
-        finishedCourses = ', '.join(self.finishedCourses)
-        return f"Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за домашние задания: {avgRating}" \
-               f"\nКурсы в процессе изучения: {coursesInProgress}\nЗавершенные курсы: {finishedCourses}"
+        return round(sum / count, 2)
 
     def __int__(self):
-        return len(self.grades)
+        count = 0
+        for grade in self.grades.values():
+            count += len(grade)
+        return count
 
     def __float__(self):
-        sum = 0
-        if len(self.grades) != 0:
-            for grades in self.grades.values():
-                for grade in grades:
-                    sum += grade
-            avr = sum / len(self.grades)
-        return avr
+        return self.averageRating()
 
     def __bool__(self):
         if len(self.grades) % 2 == 1:
@@ -59,8 +56,18 @@ class Student:
                     mx = grade
                 if grade < mn:
                     mn = grade
+        if mn == 11.0 and mx == -1.0:
+            return "Не оценен"
         z = complex(mx, mn)
         return z
+
+    def __str__(self):
+        avgRating = self.averageRating()
+        coursesInProgress = ', '.join(self.coursesInProgress)
+        finishedCourses = ', '.join(self.finishedCourses)
+        return f"   Имя: {self.name}\n    Фамилия: {self.surname}\n    Средняя оценка за домашние задания: {avgRating}"\
+               f"\n    Курсы в процессе изучения: {coursesInProgress}\n    Завершенные курсы: {finishedCourses}"
+
 
 class Mentor:
     def __init__(self, name, surname):
@@ -69,8 +76,12 @@ class Mentor:
         self.coursesAttached = []
 
     def rateStudent(self, student, course, grade):
-        student.grades[course] = [grade]
-
+        if course in self.coursesAttached and (
+                course in student.coursesInProgress or course in student.finishedCourses):
+            if course in student.grades:
+                student.grades[course].append(grade)
+            else:
+                student.grades[course] = [grade]
 
     def addCourse(self, course):
         self.coursesAttached.append(course)
@@ -82,28 +93,25 @@ class Lecturer(Mentor):
         self.grades = {}
         self.coursesAttached = []
 
-    def averageRaiting(self):
+    def averageRating(self):
         sum = 0
         count = 0
-        for grades in self.grades.values():
-            for grade in grades:
-                sum += grade
-                count += 1
+        for grade in self.grades.values():
+            count += len(grade)
+            for element in grade:
+                sum += element
         if count == 0:
             return "Не оценен"
-        return round(sum / count, 3)
+        return round(sum / count, 2)
 
     def __int__(self):
-        return len(self.grades)
+        count = 0
+        for grade in self.grades.values():
+            count += len(grade)
+        return count
 
     def __float__(self):
-        sum = 0
-        if len(self.grades) != 0:
-            for grades in self.grades.values():
-                for grade in grades:
-                    sum += grade
-            avr = sum / len(self.grades)
-        return avr
+        return self.averageRating()
 
     def __bool__(self):
         if len(self.grades) % 2 == 1:
@@ -120,11 +128,14 @@ class Lecturer(Mentor):
                     mx = grade
                 if grade < mn:
                     mn = grade
+        if mn == 11.0 and mx == -1.0:
+            return "Не оценен"
         z = complex(mx, mn)
         return z
     def __str__(self):
-        avgRaiting = self.averageRaiting()
-        return f"Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за лекции: {avgRaiting}"
+        avgRating = self.averageRating()
+        return f"   Имя: {self.name}\n    Фамилия: {self.surname}\n    Курсы: {', '.join(self.coursesAttached)}" \
+               f"\n    Средняя оценка за лекции: {avgRating}"
 
 
 
@@ -134,63 +145,113 @@ class Reviewer(Mentor):
         self.coursesAttached = []
 
     def rateStudent(self, student, course, grade):
-        if course in self.coursesAttached and ((course in student.coursesInProgress)
-                                               or (course in student.finishedCourses)):
-            student.grades[course] = [grade]
+        if course in self.coursesAttached and course in student.coursesInProgress:
+            if course in student.grades:
+                student.grades[course].append(grade)
+            else:
+                student.grades[course] = [grade]
 
     def __str__(self):
-        return f"Имя: {self.name}\nФамилия: {self.surname}"
+        return f"   Имя: {self.name}\n    Фамилия: {self.surname}\n    Курсы: {', '.join(self.coursesAttached)}"
 
 
 
-firstStudent = Student("Andrey", "Andrey", "male")
-secondStudent = Student("Pavel", "Pavel", "male")
-
-firstReviewer = Reviewer("Ilya", "Ilya")
-firstReviewer.addCourse("python")
-firstReviewer.addCourse("c++")
-firstReviewer.addCourse("JS")
+firstStudent = Student("Andrey", "FFFFFF", "male")
 firstStudent.addCourse("python")
 firstStudent.addCourse("c++")
 firstStudent.addCourse("JS")
+
+secondStudent = Student("Pavel", "DDDDDD", "male")
 secondStudent.addCourse("python")
 secondStudent.addCourse("c++")
-firstReviewer.rateStudent(secondStudent, "python", 3)
-firstReviewer.rateStudent(secondStudent, "c++", 8)
-firstReviewer.rateStudent(firstStudent, "python", 7)
-firstReviewer.rateStudent(firstStudent, "c++", 7)
-firstReviewer.rateStudent(firstStudent, "JS", 9)
 
-firstLecturer = Lecturer("Alexey", "Alexey")
+firstReviewer = Reviewer("Ilya", "SSSSSS")
+firstReviewer.addCourse("python")
+firstReviewer.addCourse("c++")
+firstReviewer.addCourse("JS")
+
+secondReviewer = Reviewer("Dmitriy", "HHHHHH")
+secondReviewer.addCourse("c++")
+secondReviewer.addCourse("python")
+
+firstLecturer = Lecturer("Alexey", "GGGGGG")
 firstLecturer.addCourse("python")
 firstLecturer.addCourse("c++")
 firstLecturer.addCourse("JS")
 
+secondLecturer = Lecturer("Sergey", "AAAAAA")
+secondLecturer.addCourse("c++")
+
+firstReviewer.rateStudent(firstStudent, "python", 6)
+firstReviewer.rateStudent(firstStudent, "c++", 7)
+firstReviewer.rateStudent(firstStudent, "JS", 9)
+secondReviewer.rateStudent(firstStudent, "c++", 8)
+secondReviewer.rateStudent(firstStudent, "python", 7)
+
+firstReviewer.rateStudent(secondStudent, "python", 3)
+firstReviewer.rateStudent(secondStudent, "c++", 9)
+secondReviewer.rateStudent(secondStudent, "c++", 10)
+secondReviewer.rateStudent(secondStudent, "python", 4)
+
 firstStudent.rateLecturer(firstLecturer, "JS", 9)
-firstStudent.rateLecturer(firstLecturer, "c++", 6)
+firstStudent.rateLecturer(firstLecturer, "c++", 2)
 firstStudent.rateLecturer(firstLecturer, "python", 8)
-secondStudent.rateLecturer(firstLecturer, "python", 3)
+secondStudent.rateLecturer(firstLecturer, "python", 6)
 secondStudent.rateLecturer(firstLecturer, "c++", 9)
 
+firstStudent.rateLecturer(secondLecturer, "c++", 10)
+secondStudent.rateLecturer(secondLecturer, "c++", 9)
 
 
-
-
-
-print(firstStudent.__str__())
-print(firstStudent.__int__())
-print(firstStudent.__bool__())
-print(firstStudent.__complex__())
-print(firstStudent.__float__())
-print("  ===========")
-print(secondStudent.__str__())
-print(secondStudent.__int__())
-print(secondStudent.__bool__())
-print(secondStudent.__complex__())
-print(secondStudent.__float__())
-print("  ===========")
-print(firstLecturer.__str__())
-print(firstLecturer.__int__())
-print(firstLecturer.__bool__())
-print(firstLecturer.__complex__())
-print(firstLecturer.__float__())
+print("\n    ======================================================================================================="
+      "=======    \n")
+print("Метод student.__str__() выводит основную информацию об экземпляре класса Student:\n", firstStudent.__str__())
+print("Метод student.__int__() выводит общее количество оценок по всем курсам экзмепляра класса Student:\n   ",
+      firstStudent.__int__())
+print("Метод student.__bool__() выводит True, если общее количество оценок по всем курсам экзмепляра класса Student не "
+      "четное, и False, если четное:\n   ", firstStudent.__bool__())
+print("Метод student.__complex__() приводит общее количество оценок по всем курсам экзмепляра класса Student к "
+      "комплексному типу:\n   ", firstStudent.__complex__())
+print("Метод student.__float__() выводит среднюю оценку за домашние задания по всем курсам экзмепляра класса Student "
+      ":\n   ", firstStudent.__float__())
+print("\n    ======================================================================================================="
+      "=======    \n")
+print("Метод student.__str__() выводит основную информацию об экземпляре класса Student:\n", secondStudent.__str__())
+print("Метод student.__int__() выводит общее количество оценок по всем курсам экзмепляра класса Student:\n   ",
+      secondStudent.__int__())
+print("Метод student.__bool__() выводит True, если общее количество оценок по всем курсам экзмепляра класса Student не "
+      "четное, и False, если четное:\n   ", secondStudent.__bool__())
+print("Метод student.__complex__() приводит общее количество оценок по всем курсам экзмепляра класса Student к "
+      "комплексному типу:\n   ", secondStudent.__complex__())
+print("Метод student.__float__() выводит среднюю оценку за домашние задания по всем курсам экзмепляра класса Student "
+      ":\n   ", secondStudent.__float__())
+print("\n    ======================================================================================================="
+      "=======    \n")
+print("Метод lecturer.__str__() выводит основную информацию об экземпляре класса Lecturer:\n", firstLecturer.__str__())
+print("Метод lecturer.__int__() выводит общее количество оценок по всем курсам экзмепляра класса Lecturer:\n   ",
+      firstLecturer.__int__())
+print("Метод lecturer.__bool__() выводит True, если общее количество оценок по всем курсам экзмепляра класса Lecturer "
+      "не четное, и False, если четное:\n   ", firstLecturer.__bool__())
+print("Метод lecturer.__complex__() приводит общее количество оценок по всем курсам экзмепляра класса Lecturer к "
+      "комплексному типу:\n   ", firstLecturer.__complex__())
+print("Метод lecturer.__float__() выводит среднюю оценку за домашние задания по всем курсам экзмепляра класса Lecturer "
+      ":\n   ", firstLecturer.__float__())
+print("\n    ======================================================================================================="
+      "=======    \n")
+print("Метод lecturer.__str__() выводит основную информацию об экземпляре класса Lecturer:\n", secondLecturer.__str__())
+print("Метод lecturer.__int__() выводит общее количество оценок по всем курсам экзмепляра класса Lecturer:\n   ",
+      secondLecturer.__int__())
+print("Метод lecturer.__bool__() выводит True, если общее количество оценок по всем курсам экзмепляра класса Lecturer "
+      "не четное, и False, если четное:\n   ", secondLecturer.__bool__())
+print("Метод lecturer.__complex__() приводит общее количество оценок по всем курсам экзмепляра класса Lecturer к "
+      "комплексному типу:\n   ", secondLecturer.__complex__())
+print("Метод lecturer.__float__() выводит среднюю оценку за домашние задания по всем курсам экзмепляра класса Lecturer "
+      ":\n   ", secondLecturer.__float__())
+print("\n    ======================================================================================================="
+      "=======    \n")
+print("Метод reviewer.__str__() выводит основную информацию об экземпляре класса Reviewer:\n", firstReviewer.__str__())
+print("\n    ======================================================================================================="
+      "=======    \n")
+print("Метод reviewer.__str__() выводит основную информацию об экземпляре класса Reviewer:\n", secondReviewer.__str__())
+print("\n    ======================================================================================================="
+      "=======    \n")
