@@ -76,6 +76,19 @@ class Game:
             position = input("Not available position. Please, try again: ")
             return self.board.changeBoard(position, type)
 
+    def existenceCheck(self, position):
+        existingCells = ["TL", "TM", "TR", "ML", "MM", "MR", "BL", "BM", "BR"]
+        if position in existingCells:
+            return position
+        else:
+            while position not in existingCells:
+                print(f"Cell with this name: {position} dose not exist. Please, write the name of an exiting cell: ")
+                print("""
+                            TL | TM | TR 
+                            ML | MM | MR 
+                            BL | BM | BR """)
+                position = input("What's your move? ")
+            return position
 
 def play():
     game = Game()
@@ -86,7 +99,7 @@ def play():
         number -= 1
         game.printingBoard()
         position = input("{} turn, what's your move? ".format(player))
-        game.modifyBoard(position, player.type)
+        game.modifyBoard(game.existenceCheck(position), player.type)
         if game.wonGame(player):
             print("{} is the Winner!".format(player))
             break
